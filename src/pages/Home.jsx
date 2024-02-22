@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchTrendingMovies } from "../fetch";
-import { MoviesList } from "../components/MoviesList/MoviesList";
+import { MoviesList } from "../components/MoviesList";
 import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
 
 export default function Home() {

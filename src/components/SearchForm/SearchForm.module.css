@@ -1,5 +1,7 @@
 .form {
-  padding: 85px 16px;
   display: flex;
+
   gap: 16px;
+  padding-left: 40px;
+  margin-top: 30px;
 }
