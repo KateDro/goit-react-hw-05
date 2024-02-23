@@ -1,10 +1,10 @@
-import { useState, useEffect, Suspense } from "react";
-import { useLocation, useParams, Link, Outlet } from "react-router-dom";
-import { fetchMovieById } from "../fetch";
-import { MovieCard } from "../components/MovieCard/MovieCard";
-import { Loader } from "../components/Loader/Loader";
-import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { Backlink } from "../components/Backlink/Backlink";
+import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
+import { Loader } from "../components/Loader/Loader";
+import { MovieCard } from "../components/MovieCard/MovieCard";
+import { fetchMovieById } from "../fetch";
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
@@ -12,7 +12,7 @@ export default function MovieDetailsPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const backLinkHref = location.state?.from ?? "/";
+  const backLinkHref = useRef(location.state);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,7 +34,7 @@ export default function MovieDetailsPage() {
 
   return (
     <div>
-      <Backlink to={backLinkHref}>Back</Backlink>
+      <Backlink to={backLinkHref.current ?? "/movies"}>Back</Backlink>
       {loading && <Loader />}
       {error && <ErrorMessage />}
       <MovieCard movie={movie} />
