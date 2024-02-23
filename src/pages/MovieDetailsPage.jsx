@@ -6,7 +6,7 @@ import { Loader } from "../components/Loader/Loader";
 import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
 import { Backlink } from "../components/Backlink/Backlink";
 
-export default function MovieDetails() {
+export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(null);

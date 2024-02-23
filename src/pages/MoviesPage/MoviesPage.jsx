@@ -1,10 +1,10 @@
-import { useSearchParams, useLocation, Link } from "react-router-dom";
-import { SearchForm } from "../components/SearchForm/SearchForm";
-import { fetchMovies } from "../fetch";
 import { useState } from "react";
-import { Loader } from "../components/Loader/Loader";
-import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
-import css from "./Movies.module.css";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+import { Loader } from "../../components/Loader/Loader";
+import { SearchForm } from "../../components/SearchForm/SearchForm";
+import { fetchMovies } from "../../fetch";
+import css from "./MoviesPage.module.css";
 
 export default function Movies() {
   const [loading, setLoading] = useState(false);

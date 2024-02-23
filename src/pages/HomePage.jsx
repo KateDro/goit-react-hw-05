@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchTrendingMovies } from "../fetch";
-import { MoviesList } from "../components/MoviesList";
+import { MovieList } from "../components/MovieList/MovieList";
 import { ErrorMessage } from "../components/ErrorMessage/ErrorMessage";
 
 export default function Home() {
@@ -25,7 +25,7 @@ export default function Home() {
     <div>
       <h1 style={{ padding: "10px", color: "green" }}>Trending today</h1>
       {error && <ErrorMessage />}
-      {movies.length > 0 && <MoviesList movies={movies} />}
+      {movies.length > 0 && <MovieList movies={movies} />}
     </div>
   );
 }
