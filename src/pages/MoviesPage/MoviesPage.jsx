@@ -1,55 +1,77 @@
-import { useState } from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
-import { Loader } from "../../components/Loader/Loader";
-import { SearchForm } from "../../components/SearchForm/SearchForm";
-import { fetchMovies } from "../../fetch";
-import css from "./MoviesPage.module.css";
+import { useEffect, useState } from "react";
+import css from "../components/App.module.css";
+import { getMovies } from "../api";
+import { MovieList } from "../components/MovieList/MovieList";
+import { Loader } from "../components/Loader";
+import { PageTitle } from "../components/PageTitle/PageTitle";
+import { SearchMovie } from "../components/SearchMovie/SearchMovie";
+import { useSearchParams } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import {
+  ErrorMessage,
+  MessageNotFound,
+} from "../components/ErrorMessage/ErrorMessage";
 
-export default function Movies() {
+export function MoviesPage() {
+  const [searchMovies, setSearchMovies] = useState([]);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [movies, setMovies] = useState([]);
   const [params, setParams] = useSearchParams();
-  const search = params.get("query") ?? "";
-  const location = useLocation();
+  const [isEmpty, setIsEmpty] = useState(false);
 
-  const searchMovie = async (query) => {
-    try {
-      setLoading(true);
-      const fetchedMovies = await fetchMovies(query);
-      setMovies(fetchedMovies.results);
-      const nextParams = query !== "" ? { query } : {};
-      setParams(nextParams);
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
+  const titleMovie = params.get("query") ?? "";
+  const handleSearch = async (newQuery) => {
+    if (titleMovie === newQuery) {
+      return;
     }
+    setSearchMovies([]);
+    setParams({ query: newQuery });
+    setIsEmpty(false);
   };
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    if (titleMovie === "") {
+      return;
+    }
+
+    if (!titleMovie) return;
+    async function searchMovie() {
+      try {
+        setLoading(true);
+        const result = await getMovies(titleMovie, {
+          abortController: controller,
+        });
+        setSearchMovies(result.results);
+        if (result.results.length === 0) {
+          setIsEmpty(true);
+          return;
+        }
+      } catch (error) {
+        if (error.code !== "ERR_CANCELED") {
+          setError(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    searchMovie();
+
+    return () => {
+      controller.abort();
+    };
+  }, [titleMovie]);
+
   return (
-    <div>
-      <SearchForm value={search} onSearch={searchMovie} />
-      {loading && <Loader />}
+    <div className={css.moviesPage}>
+      <PageTitle />
       {error && <ErrorMessage />}
-      <div>
-        {movies.map((movie) => (
-          <Link key={movie.id} to={`${movie.id}`} state={{ from: location }}>
-            <li className={css.item}>
-              <div className={css.box}>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  width="120"
-                  height="180"
-                />
-                <h3>{movie.title}</h3>
-              </div>
-            </li>
-          </Link>
-        ))}
-      </div>
+      <SearchMovie value={titleMovie} onSearch={handleSearch} />
+      {loading && <Loader />}
+      {searchMovies.length > 0 && <MovieList movies={searchMovies} />}
+      {isEmpty && <MessageNotFound />}
+      <Toaster position="bottom-center" />
     </div>
   );
 }
