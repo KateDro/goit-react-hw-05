@@ -1,19 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-// import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 import { Loader } from "../../components/Loader/Loader";
-// import { SearchForm } from "../../components/SearchForm/SearchForm";
-// import { fetchMovies } from "../../fetch";
 import css from "./MoviesPage.module.css";
-
 import { useEffect, useState } from "react";
-
 import { fetchMovies } from "../../fetch";
 import { MovieList } from "../../components/MovieList/MovieList";
-
 import { PageTitle } from "../../components/PageTitle";
 import { SearchForm } from "../../components/SearchForm/SearchForm";
-
-import { Toaster } from "react-hot-toast";
 import {
   ErrorMessage,
   NfMessage,
@@ -77,7 +69,7 @@ export default function MoviesPage() {
       {loading && <Loader />}
       {searchMovies.length > 0 && <MovieList movies={searchMovies} />}
       {isEmpty && <NfMessage />}
-      <Toaster position="bottom-center" />
+      {/* <Toaster position="bottom-center" /> */}
     </div>
   );
 }

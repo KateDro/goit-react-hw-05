@@ -1,7 +1,15 @@
+import css from "./ErrorMessage.module.css";
+
 export const ErrorMessage = () => {
-  return <p>Oops, something went wrong! Try to reload the page...</p>;
+  return (
+    <p className={css.txtError}>
+      Oops, something went wrong! Try to reload the page...
+    </p>
+  );
 };
 
 export const NfMessage = () => {
-  return <p>Nothing was found! Try another request...</p>;
+  return (
+    <p className={css.txtError}>Nothing was found! Try another request...</p>
+  );
 };
