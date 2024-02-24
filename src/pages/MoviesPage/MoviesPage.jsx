@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
-import css from "../components/App.module.css";
-import { getMovies } from "../api";
-import { MovieList } from "../components/MovieList/MovieList";
-import { Loader } from "../components/Loader";
-import { PageTitle } from "../components/PageTitle/PageTitle";
-import { SearchMovie } from "../components/SearchMovie/SearchMovie";
 import { useSearchParams } from "react-router-dom";
+// import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+import { Loader } from "../../components/Loader/Loader";
+// import { SearchForm } from "../../components/SearchForm/SearchForm";
+// import { fetchMovies } from "../../fetch";
+import css from "./MoviesPage.module.css";
+
+import { useEffect, useState } from "react";
+
+import { fetchMovies } from "../../fetch";
+import { MovieList } from "../../components/MovieList/MovieList";
+
+import { PageTitle } from "../../components/PageTitle";
+import { SearchForm } from "../../components/SearchForm/SearchForm";
+
 import { Toaster } from "react-hot-toast";
 import {
   ErrorMessage,
-  MessageNotFound,
-} from "../components/ErrorMessage/ErrorMessage";
-
-export function MoviesPage() {
+  NfMessage,
+} from "../../components/ErrorMessage/ErrorMessage";
+export default function MoviesPage() {
   const [searchMovies, setSearchMovies] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +46,7 @@ export function MoviesPage() {
     async function searchMovie() {
       try {
         setLoading(true);
-        const result = await getMovies(titleMovie, {
+        const result = await fetchMovies(titleMovie, {
           abortController: controller,
         });
         setSearchMovies(result.results);
@@ -67,10 +73,10 @@ export function MoviesPage() {
     <div className={css.moviesPage}>
       <PageTitle />
       {error && <ErrorMessage />}
-      <SearchMovie value={titleMovie} onSearch={handleSearch} />
+      <SearchForm value={titleMovie} onSearch={handleSearch} />
       {loading && <Loader />}
       {searchMovies.length > 0 && <MovieList movies={searchMovies} />}
-      {isEmpty && <MessageNotFound />}
+      {isEmpty && <NfMessage />}
       <Toaster position="bottom-center" />
     </div>
   );
